@@ -45,8 +45,6 @@ const initialSteamAuthState = {steamData: []};
 function steamAuth(state = initialSteamAuthState, action){
 	switch (action.type){
 		case 'SteamAuth':
-			console.log("READY 4 ACTION");
-			console.log(action.data);
 			return {...state, steamData: action.data}
 		default:
 			return state;

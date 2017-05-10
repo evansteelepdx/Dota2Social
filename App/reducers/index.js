@@ -3,6 +3,9 @@ import { NavigationActions } from 'react-navigation';
 
 import { AppNavigator } from '../navigators/AppNavigator';
 
+var RNFS = require('react-native-fs');
+
+
 // Start with two routes: The Main screen, with the Login screen on top.
 const firstAction = AppNavigator.router.getActionForPathAndParams('Main');
 const tempNavState = AppNavigator.router.getStateForAction(firstAction);
@@ -27,6 +30,20 @@ function nav(state = initialNavState, action) {
 	return nextState || state;
 }
 
+function getSteamAuth(){
+	var path = RNFS.DocumentDirectoryPath + '/test.txt';
+
+	return RNFS.unlink(path)
+		.then(() => {
+			console.log('FILE DELETED');
+
+		})
+		.catch((err) => {
+			console.log(err.message);
+		});
+}
+
+const steamResult = getSteamAuth();
 const initialAuthState = { isLoggedIn: false };
 
 function auth(state = initialAuthState, action) {

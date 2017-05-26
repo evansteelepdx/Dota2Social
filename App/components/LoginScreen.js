@@ -12,16 +12,29 @@ const steam_uri = "https://steamcommunity.com/openid/login?" +
 	"openid.realm=https://dota2social&" +
 	"openid.return_to=https://dota2social/signin/";
 
-const LoginScreen = ({ navigation, onMessage, onError }) => (
-	<WebView
-	source={{uri: steam_uri}}
-	onNavigationStateChange={onMessage}
-	renderError={e=>{
-		navigation.dispatch({ type: 'Login'  })
-	}}
-	/>
-);
+class LoginScreen extends React.Component{
+	componentWillMount(){
+		this.props.checkLogin(this.props);
+	}
+	componentWillReceiveProps(nextProps){
+		if(nextProps.isLoggedIn){
+			this.props.navigation.dispatch({type: 'Login'});
+		}
+	}
+	render(){
+		const {navigation, onMessage, onError, isLoggedIn} = this.props
+		return (
+			<WebView
+			source={{uri: steam_uri}}
+			onNavigationStateChange={onMessage}
+			renderError={e=>{
+				navigation.dispatch({ type: 'Login'  })
+			}}
+			/>
 
+		)
+	}
+}
 
 function getParameterByName(name, url) {
 	if (!url) url = window.location.href;
@@ -35,7 +48,7 @@ function getParameterByName(name, url) {
 }
 
 const mapStateToProps = state => ({
-	isLoggedIn: state.auth.isLoggedIn,
+	isLoggedIn: state.auth.steamLoggedIn
 });
 
 LoginScreen.propTypes = {
@@ -43,12 +56,16 @@ LoginScreen.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
+	checkLogin: (login) =>{
+		console.log(login);
+	},
 	onMessage: (message) =>{
 		const parsedUrl = getParameterByName('openid.identity', message.url);
 		if (parsedUrl != null){
-			dispatch({type: 'SteamAuth', data: parsedUrl})
+			if (!(parsedUrl.includes("identifier_select"))){
+				dispatch({type: 'SteamLogin', data: parsedUrl})
+			}
 		}
-
 	}
 });
 

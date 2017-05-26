@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import {connect} from 'react-redux';
+import { StyleSheet, View, Text } from 'react-native';
 
 import LoginStatusMessage from './LoginStatusMessage';
-import AuthButton from './AuthButton';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,15 +13,24 @@ const styles = StyleSheet.create({
   },
 });
 
-const MainScreen = () => (
-  <View style={styles.container}>
-    <LoginStatusMessage />
-    <AuthButton />
-  </View>
-);
+class MainScreen extends React.Component{
+	render(){
+		return(
+			<View style={styles.container}>
+			<LoginStatusMessage />
+			</View>
+
+		);
+	}
+}
 
 MainScreen.navigationOptions = {
-  title: 'Home Screen',
+	title: 'Home Screen',
 };
 
-export default MainScreen;
+const mapStateToProps = state => ({
+});
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

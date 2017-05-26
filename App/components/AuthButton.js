@@ -11,18 +11,20 @@ const AuthButton = ({ logout, login, isLoggedIn }) => (
 );
 
 AuthButton.propTypes = {
-  isLoggedIn: PropTypes.bool.isRequired,
   logout: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.auth.isLoggedIn,
+  isLoggedIn: state.auth.steamLoggedIn,
 });
 
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch({ type: 'Logout' }),
-  login: () => dispatch(NavigationActions.navigate({ routeName: 'Login' })),
+	logout: () => {
+		dispatch({ type: 'Logout' })
+		dispatch({ type: 'SteamLogout' })
+	},
+	login: () => dispatch(NavigationActions.navigate({ routeName: 'Login' })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthButton);

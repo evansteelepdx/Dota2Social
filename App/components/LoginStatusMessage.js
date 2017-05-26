@@ -6,7 +6,10 @@ import {
 	Text,
 	View,
 } from 'react-native';
+
 import { NavigationActions } from 'react-navigation';
+
+import AuthButton from './AuthButton';
 
 const styles = StyleSheet.create({
 	welcome: {
@@ -16,32 +19,29 @@ const styles = StyleSheet.create({
 	},
 });
 
-const LoginStatusMessage = ({ isLoggedIn, dispatch, steam }) => {
-	if (!isLoggedIn) {
-		return <Text>Please log in</Text>;
-	}
-	return (
-		<View>
-		<Text style={styles.welcome}>
-		{'You are "logged in" right now\nYour ID is '}
-		{steam}
-		</Text>
-		<Button
-		onPress={() => dispatch(NavigationActions.navigate({ routeName: 'Profile' }))}
-		title="Profile"
-		/>
-		</View>
-	);
-};
+class LoginStatusMessage extends React.Component{
+	render() {
+		const { isLoggedIn, dispatch, steam } = this.props;
+		return (
+			<View>
+			{isLoggedIn ?
+			<Button
+			onPress={() => dispatch(NavigationActions.navigate({ routeName: 'Profile' }))}
+			title="Profile"
+			/>
+			:
+				<Text>LUL</Text>
+			}
+			<AuthButton/>
+			</View>
+		);
 
-LoginStatusMessage.propTypes = {
-	isLoggedIn: PropTypes.bool.isRequired,
-	dispatch: PropTypes.func.isRequired,
-};
+	}
+}
 
 const mapStateToProps = state => ({
-	isLoggedIn: state.auth.isLoggedIn,
-	steam: state.steamAuth.steamData
+	isLoggedIn: state.auth.steamLoggedIn,
+	steam: state.auth.steamInfo
 });
 
 export default connect(mapStateToProps)(LoginStatusMessage);

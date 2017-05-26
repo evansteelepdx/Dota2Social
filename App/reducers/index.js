@@ -4,9 +4,12 @@ import { NavigationActions } from 'react-navigation';
 import { AppNavigator } from '../navigators/AppNavigator';
 
 var RNFS = require('react-native-fs');
+const path = RNFS.DocumentDirectoryPath + '/steamauth.txt';
 
 
-// Start with two routes: The Main screen, with the Login screen on top.
+// Which route comes first depends on if we are authenticated or not:
+// hence why we've encapsulated this process in a promise
+
 const firstAction = AppNavigator.router.getActionForPathAndParams('Main');
 const tempNavState = AppNavigator.router.getStateForAction(firstAction);
 const secondAction = AppNavigator.router.getActionForPathAndParams('Login');
@@ -19,59 +22,54 @@ function nav(state = initialNavState, action) {
 			nextState = AppNavigator.router.getStateForAction(NavigationActions.back(), state);
 			break;
 		case 'Logout':
-			nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'Login' }), state);
+			nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'Main' }), state);
 			break;
-		default:
+	default:
 			nextState = AppNavigator.router.getStateForAction(action, state);
 			break;
 	}
 
-	// Simply return the original `state` if `nextState` is null or undefined.
 	return nextState || state;
 }
 
-function getSteamAuth(){
-	var path = RNFS.DocumentDirectoryPath + '/test.txt';
+const AuthState = { 
+	steamLoggedIn: false, 
+	steamInfo: {},
+	facebookLoggedIn: false,
+	facebookInfo: [],
+	twitterLoggedIn: false,
+	twitterInfo: []
+};
 
-	return RNFS.unlink(path)
-		.then(() => {
-			console.log('FILE DELETED');
-
-		})
-		.catch((err) => {
-			console.log(err.message);
-		});
-}
-
-const steamResult = getSteamAuth();
-const initialAuthState = { isLoggedIn: false };
-
-function auth(state = initialAuthState, action) {
+function auth(state = AuthState, action) {
 	switch (action.type) {
-		case 'Login':
-			return { ...state, isLoggedIn: true };
-		case 'Logout':
-			return { ...state, isLoggedIn: false };
+		case 'SteamLogin':
+			let steamObject = {
+				ID: action.data
+			};
+			return { 
+				...state, 
+				steamLoggedIn: true,
+				steamInfo: steamObject
+			};
+		case 'SteamLogout':
+			return { 
+				...state, 
+				steamLoggedIn: false ,
+				steamInfo: {}	
+				};
 		default:
 			return state;
 	}
 }
 
-const initialSteamAuthState = {steamData: []};
+const DotaState = {
 
-function steamAuth(state = initialSteamAuthState, action){
-	switch (action.type){
-		case 'SteamAuth':
-			return {...state, steamData: action.data}
-		default:
-			return state;
-	}
 }
 
 const AppReducer = combineReducers({
 	nav,
-	auth,
-	steamAuth
+	auth
 });
 
 export default AppReducer;

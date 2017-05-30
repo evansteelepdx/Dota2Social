@@ -14,10 +14,7 @@ const steam_uri = "https://steamcommunity.com/openid/login?" +
 
 class LoginScreen extends React.Component{
 	componentWillMount(){
-		this.props.checkLogin(this.props);
-	}
-	componentWillReceiveProps(nextProps){
-		if(nextProps.isLoggedIn){
+		if(this.props.isLoggedIn){
 			this.props.navigation.dispatch({type: 'Login'});
 		}
 	}
@@ -56,9 +53,6 @@ LoginScreen.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-	checkLogin: (login) =>{
-		console.log(login);
-	},
 	onMessage: (message) =>{
 		const parsedUrl = getParameterByName('openid.identity', message.url);
 		if (parsedUrl != null){

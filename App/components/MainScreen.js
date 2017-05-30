@@ -19,7 +19,6 @@ class MainScreen extends React.Component{
 			<View style={styles.container}>
 			<LoginStatusMessage />
 			</View>
-
 		);
 	}
 }

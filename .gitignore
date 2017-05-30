@@ -54,3 +54,6 @@ buck-out/
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
+
+# API keys
+App/components/utils/secrets.js

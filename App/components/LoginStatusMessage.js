@@ -10,6 +10,8 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 import AuthButton from './AuthButton';
+import renderIf from './utils/renderIf';
+import * as secrets from './utils/secrets';
 
 const styles = StyleSheet.create({
 	welcome: {
@@ -20,21 +22,38 @@ const styles = StyleSheet.create({
 });
 
 class LoginStatusMessage extends React.Component{
+	componentWillMount(){
+		fetch('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + secrets.STEAM_API_KEY + "&steamids=" + this.props.steam.ID)
+			.then((response) => response.json())
+			.then((responseJson) => {
+				this.props.onSteamInfo(responseJson);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
 	render() {
-		const { isLoggedIn, dispatch, steam } = this.props;
+		const { isLoggedIn, dispatch, steam, onSteamInfo, onProfileButton } = this.props;
 		return (
 			<View>
-			{isLoggedIn ?
-			<Button
-			onPress={() => dispatch(NavigationActions.navigate({ routeName: 'Profile' }))}
-			title="Profile"
-			/>
-			:
-				<Text>LUL</Text>
-			}
+			<View>
+			{renderIf(isLoggedIn,
+				<Text>{"Welcome, " + steam.name}</Text>
+			)}
+			</View>
+			<View>
+			{isLoggedIn ? ( 
+				<Button
+				title="My Matches"
+				onPress={onProfileButton}
+				/>
+			) : (
+				<Text>Please log in!</Text>
+			)}
 			<AuthButton/>
 			</View>
-		);
+			</View>
+	);
 
 	}
 }
@@ -44,4 +63,13 @@ const mapStateToProps = state => ({
 	steam: state.auth.steamInfo
 });
 
-export default connect(mapStateToProps)(LoginStatusMessage);
+const mapDispatchToProps = dispatch => ({
+	onSteamInfo: (steamInfo) =>{
+		dispatch({type:'SteamInfo', data: steamInfo.response.players[0]})
+	},
+	onProfileButton:() =>{
+		dispatch(NavigationActions.navigate({ routeName: 'Profile' }))
+	}
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginStatusMessage);

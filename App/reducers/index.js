@@ -3,6 +3,8 @@ import { NavigationActions } from 'react-navigation';
 
 import { AppNavigator } from '../navigators/AppNavigator';
 
+import * as secrets from '../components/utils/secrets'
+
 var RNFS = require('react-native-fs');
 const path = RNFS.DocumentDirectoryPath + '/steamauth.txt';
 
@@ -33,8 +35,10 @@ function nav(state = initialNavState, action) {
 }
 
 const AuthState = { 
-	steamLoggedIn: false, 
-	steamInfo: {},
+	steamLoggedIn: true, 
+	steamInfo: {
+		ID: "76561198002007932"
+	},
 	facebookLoggedIn: false,
 	facebookInfo: [],
 	twitterLoggedIn: false,
@@ -43,9 +47,21 @@ const AuthState = {
 
 function auth(state = AuthState, action) {
 	switch (action.type) {
+		case 'SteamInfo':
+			let steamInfoObject = {
+				ID: action.data.steamid,
+				name: action.data.personaname,
+				image: action.data.avatarmedium
+			};
+			return {
+				...state,
+				steamInfo: steamInfoObject
+			};
 		case 'SteamLogin':
+			var url = action.data
+			var page = url.substring(url.lastIndexOf('/') + 1);
 			let steamObject = {
-				ID: action.data
+				ID: page
 			};
 			return { 
 				...state, 

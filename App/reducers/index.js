@@ -26,7 +26,7 @@ function nav(state = initialNavState, action) {
 		case 'Logout':
 			nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'Main' }), state);
 			break;
-	default:
+		default:
 			nextState = AppNavigator.router.getStateForAction(action, state);
 			break;
 	}
@@ -48,8 +48,9 @@ const AuthState = {
 function auth(state = AuthState, action) {
 	switch (action.type) {
 		case 'SteamInfo':
+			var id = action.data.steamid;
 			let steamInfoObject = {
-				ID: action.data.steamid,
+				ID: id,
 				name: action.data.personaname,
 				image: action.data.avatarmedium
 			};
@@ -73,18 +74,36 @@ function auth(state = AuthState, action) {
 				...state, 
 				steamLoggedIn: false ,
 				steamInfo: {}	
-				};
+			};
 		default:
 			return state;
 	}
 }
 
 const DotaState = {
-
+	openDotaID: "",
+	matches: []
 }
 
+function dota(state=DotaState, action){
+	switch (action.type){
+		case 'updateDotaID':
+			return {
+				...state,
+				openDotaID: action.data
+			};
+		case 'recentDotaMatches':
+			return{
+				...state,
+				matches: action.array
+			}
+		default:
+			return state;
+	}
+}
 const AppReducer = combineReducers({
 	nav,
+	dota,
 	auth
 });
 

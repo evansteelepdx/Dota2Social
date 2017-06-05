@@ -4,6 +4,7 @@ import {
 	Button,
 	StyleSheet,
 	Text,
+	Image,
 	View,
 } from 'react-native';
 
@@ -13,34 +14,49 @@ import AuthButton from './AuthButton';
 import renderIf from './utils/renderIf';
 import * as secrets from './utils/secrets';
 
-const styles = StyleSheet.create({
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
-	},
-});
+import bigInt from './bigInt';
 
+const styles = StyleSheet.create({
+	container: {
+		flex: 2,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#F5FCFF',
+
+	},
+
+})
 class LoginStatusMessage extends React.Component{
 	componentWillMount(){
-		fetch('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + secrets.STEAM_API_KEY + "&steamids=" + this.props.steam.ID)
-			.then((response) => response.json())
-			.then((responseJson) => {
-				this.props.onSteamInfo(responseJson);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+		if(this.props.isLoggedIn == true){
+			fetch('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + secrets.STEAM_API_KEY + "&steamids=" + this.props.steam.ID)
+				.then((response) => response.json())
+				.then((responseJson) => {
+					this.props.onSteamInfo(responseJson);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+
+		}
 	}
 	render() {
 		const { isLoggedIn, dispatch, steam, onSteamInfo, onProfileButton } = this.props;
+
 		return (
 			<View>
-			<View>
 			{renderIf(isLoggedIn,
-				<Text>{"Welcome, " + steam.name}</Text>
+				<View style={styles.container}>
+				<View>
+				<Image
+				style={{width: 100, height: 100}}
+				source={{uri: steam.image}}
+				/>
+				</View>
+				<Text>{"Welcome, " + steam.name + "(" + steam.ID  + ")"}</Text>
+
+				</View>
 			)}
-			</View>
 			<View>
 			{isLoggedIn ? ( 
 				<Button

@@ -10,11 +10,28 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 class OpenDota extends React.Component{
+	componentWillMount(){
+		
+	}
 	render() {
-		const { isLoggedIn, dispatch, steam } = this.props;
+		const { isLoggedIn, dispatch } = this.props;
+		var payments = [];
+		for(let i = 0; i < noGuest; i++){
+			payments.push(
+				<View key = {i}>
+				<View>
+				<TextInput />
+				</View>
+				<View>
+				<TextInput />
+				</View>
+				<View>
+				<TextInput />
+				</View>
+				</View>
+			)
+		}
 		return (
-			<View>
-			</View>
 		);
 
 	}
@@ -24,5 +41,9 @@ const mapStateToProps = state => ({
 	steam: state.auth.steamInfo,
 	OpenDota: state.dota.stats
 });
+
+const mapDispatchToProps = => ({
+	fetchGames:(playerID)
+})
 
 export default connect(mapStateToProps)(OpenDota);

@@ -39,7 +39,6 @@ class ProfileScreen extends React.Component{
 	componentWillReceiveProps(nextProps){
 		if(nextProps.dota.openDotaID != "" && nextProps.dota.matches.length==0){
 			this.props.updateDota(nextProps.dota.openDotaID);
-			console.log(this.props)
 		}
 	}
 	render(){
@@ -69,7 +68,6 @@ const mapDispatchToProps = dispatch => ({
 		fetch('https://api.opendota.com/api/players/'+openDotaID+'/recentMatches')
 			.then((response) => response.json())
 			.then((response) =>{
-				console.log(response);
 				dispatch({type: 'recentDotaMatches', array: response})
 			})
 	}

@@ -10,9 +10,6 @@ import {
 import { NavigationActions } from 'react-navigation';
 
 class OpenDota extends React.Component{
-	componentWillMount(){
-		
-	}
 	render() {
 		const { isLoggedIn, dispatch } = this.props;
 		var payments = [];
@@ -38,12 +35,9 @@ class OpenDota extends React.Component{
 }
 
 const mapStateToProps = state => ({
-	steam: state.auth.steamInfo,
-	OpenDota: state.dota.stats
 });
 
 const mapDispatchToProps = => ({
-	fetchGames:(playerID)
 })
 
 export default connect(mapStateToProps)(OpenDota);

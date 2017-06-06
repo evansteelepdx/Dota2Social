@@ -29,15 +29,12 @@ const styles = StyleSheet.create({
 class LoginStatusMessage extends React.Component{
 	componentWillMount(){
 		if(this.props.isLoggedIn == true){
-			fetch('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + secrets.STEAM_API_KEY + "&steamids=" + this.props.steam.ID)
-				.then((response) => response.json())
-				.then((responseJson) => {
-					this.props.onSteamInfo(responseJson);
-				})
-				.catch((error) => {
-					console.error(error);
-				});
-
+			this.props.onSteamInfo(this.props.steam.ID);	
+		}
+	}
+	componentWillReceiveProps(nextProps){
+		if (typeof nextProps.steam.name == "undefined" && nextProps.isLoggedIn == true){
+			this.props.onSteamInfo(nextProps.steam.ID);
 		}
 	}
 	render() {
@@ -58,13 +55,13 @@ class LoginStatusMessage extends React.Component{
 				</View>
 			)}
 			<View>
-			{isLoggedIn ? ( 
+			{isLoggedIn? ( 
 				<Button
 				title="My Matches"
 				onPress={onProfileButton}
 				/>
 			) : (
-				<Text>Please log in!</Text>
+				<Text>No Valid Login Detected</Text>
 			)}
 			<AuthButton/>
 			</View>
@@ -81,7 +78,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	onSteamInfo: (steamInfo) =>{
-		dispatch({type:'SteamInfo', data: steamInfo.response.players[0]})
+		fetch('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + secrets.STEAM_API_KEY + "&steamids=" + steamInfo)
+			.then((response) => response.json())
+			.then((responseJson) => {
+				dispatch({type:'SteamInfo', data: responseJson.response.players[0]})
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	},
 	onProfileButton:() =>{
 		dispatch(NavigationActions.navigate({ routeName: 'Profile' }))

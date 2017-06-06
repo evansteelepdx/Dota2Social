@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import bigInt from './bigInt';
+import OpenDotaList from './OpenDotaList'
 
 const styles = StyleSheet.create({
 	container: {
@@ -45,7 +46,15 @@ class ProfileScreen extends React.Component{
 		const {steam,updateID,dota} = this.props;
 		return(
 			<View style={styles.container}>
-			<Text>{dota.openDotaID}</Text>
+			{dota.matches.map(match => (
+				<OpenDotaList
+				key={match.match_id}
+				matches={match}
+				/>
+			))}
+			<View>
+			<Text>{dota.matches.length + " matches"}</Text>
+			</View>
 			</View>
 
 		);

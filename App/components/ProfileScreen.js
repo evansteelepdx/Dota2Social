@@ -4,10 +4,14 @@ import {
 	StyleSheet,
 	Text,
 	View,
+	ScrollView,
+	TouchableOpacity,
 } from 'react-native';
 
 import bigInt from './bigInt';
 import OpenDotaList from './OpenDotaList'
+
+import { NavigationActions  } from 'react-navigation'
 
 const styles = StyleSheet.create({
 	container: {
@@ -15,11 +19,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: '#F5FCFF',
-	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
 	},
 });
 
@@ -43,18 +42,25 @@ class ProfileScreen extends React.Component{
 		}
 	}
 	render(){
-		const {steam,updateID,dota} = this.props;
+		const {navigation, matchDetails, steam, updateID, dota} = this.props;
 		return(
 			<View style={styles.container}>
+			<ScrollView>
 			{dota.matches.map(match => (
-				<OpenDotaList
+				<TouchableOpacity
+				onPress={
+  				() => matchDetails({match}, {navigation})		
+				}
 				key={match.match_id}
+				>
+				<View>
+				<OpenDotaList
 				matches={match}
 				/>
+				</View>
+				</TouchableOpacity>
 			))}
-			<View>
-			<Text>{dota.matches.length + " matches"}</Text>
-			</View>
+			</ScrollView>
 			</View>
 
 		);
@@ -72,6 +78,14 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	updateID: (newID) => {
 		dispatch({type: 'updateDotaID', data: newID})
+	},
+	matchDetails: (match, navigation) => {
+		const navigateAction = NavigationActions.navigate({
+			routeName: 'dotaMatch',
+			params: {matchObject:match},
+			action: NavigationActions.navigate({ routeName: 'dotaMatch' })
+		})
+		navigation.navigation.dispatch(navigateAction);
 	},
 	updateDota: (openDotaID) =>{
 		fetch('https://api.opendota.com/api/players/'+openDotaID+'/recentMatches')

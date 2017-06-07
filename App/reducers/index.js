@@ -82,7 +82,8 @@ function auth(state = AuthState, action) {
 
 const DotaState = {
 	openDotaID: "",
-	matches: []
+	matches: [],
+	currentMatch: {}
 }
 
 function dota(state=DotaState, action){
@@ -93,9 +94,14 @@ function dota(state=DotaState, action){
 				openDotaID: action.data
 			};
 		case 'recentDotaMatches':
-			return{
+			return {
 				...state,
 				matches: action.array
+			}
+		case 'currentMatch':
+			return {
+				...state,
+				currentMatch: action.match
 			}
 		default:
 			return state;

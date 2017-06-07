@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 });
-
 class MainScreen extends React.Component{
 	render(){
 		return(

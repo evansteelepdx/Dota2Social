@@ -5,11 +5,13 @@ import { addNavigationHelpers, StackNavigator } from 'react-navigation';
 import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
 import ProfileScreen from '../components/ProfileScreen';
+import DotaMatchScreen from '../components/DotaMatchScreen';
 
 export const AppNavigator = StackNavigator({
 	Login: { screen: LoginScreen },
 	Main: { screen: MainScreen },
-	Profile: { screen: ProfileScreen} 
+	Profile: { screen: ProfileScreen},
+	dotaMatch: {screen: DotaMatchScreen},
 });
 
 const AppWithNavigationState = ({ dispatch, nav }) => (

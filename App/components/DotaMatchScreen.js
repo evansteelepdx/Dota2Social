@@ -24,18 +24,18 @@ const styles = StyleSheet.create({
 
 const playerRow = (player) => (
 	<View>
-		<View>
-			<Image source={`${ODOTA_API}${heroes[player.hero_id].img}`}/>
+	<View>
+	<Image source={'${ODOTA_API}${heroes[player.hero_id].img}'}/>
 		</View>
-		<View>
-			<Text>{player.personaname}</Text>
-		</View>
+	<View>
+	<Text>{player.personaname}</Text>
+	</View>
 	</View>
 );
 
 
 class DotaMatchScreen extends React.Component{
-	componentDidMount() {
+	componentWillMount() {
 		const { match } = this.props.navigation.state.params.matchObject;
 		fetch(`${ODOTA_API}/api/matches/${match.match_id}`)
 			.then((response) => response.json())
@@ -46,15 +46,19 @@ class DotaMatchScreen extends React.Component{
 	render(){
 		const { match } = this.props.navigation.state.params.matchObject
 		const { currentMatch } = this.props
-		console.log(`${ODOTA_API}${heroes[match ? "34" : "86"].img}`);
 		return(
 			<View style={styles.container}>
+			{currentMatch.players? (
 				<Image
-					style={{width: 100, height: 100}}
-					source={{ uri: `${ODOTA_API}${heroes[currentMatch ? currentMatch.players[0].hero_id : "86"].img}` }}
-					/>
+				style={{width: 100, height: 100}}
+				source={{ uri: `${ODOTA_API}${heroes[currentMatch ? currentMatch.players[0].hero_id : "86"].img}` }}
+				/>
+			):(
+				<Text>Not quite ready yet</Text>
+
+			)}
 			</View>
-		);
+	);
 	}
 }
 DotaMatchScreen.navigationOptions = {

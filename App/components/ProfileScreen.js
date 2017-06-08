@@ -85,7 +85,6 @@ const mapDispatchToProps = dispatch => ({
 			params: {matchObject:match},
 			action: NavigationActions.navigate({ routeName: 'dotaMatch' })
 		})
-		console.log("whatever");
 		navigation.navigation.dispatch(navigateAction);
 	},
 	updateDota: (openDotaID) =>{

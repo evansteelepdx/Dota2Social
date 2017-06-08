@@ -64,14 +64,18 @@ class DotaMatchScreen extends React.Component{
 		if (currentMatch.players) {
 			return(
 				<View style={styles.table}>
-					{currentMatch.players.map(playerRow)}
+				{currentMatch.players.map(playerRow)}
 				</View>
 			);
 		}
 		else {
 			return(
 				<View style={styles.container}>
-					<Text>Not quite ready yet</Text>
+				<Image
+				style={{width:100, height:100}}
+				source={require('../resources/images/loading.gif')}
+				/>
+
 				</View>
 			);
 		}

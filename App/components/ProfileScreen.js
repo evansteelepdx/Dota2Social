@@ -16,11 +16,14 @@ import { NavigationActions  } from 'react-navigation'
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
 		backgroundColor: '#F5FCFF',
 	},
+	imageContainer:{
+		flex: 1,
+		padding: 40,
+		justifyContent: 'center',
+		alignItems: 'center',
+	}
 });
 
 class ProfileScreen extends React.Component{
@@ -45,13 +48,16 @@ class ProfileScreen extends React.Component{
 	render(){
 		const {navigation, matchDetails, steam, updateID, dota} = this.props;
 		return(
-			<View style={styles.container}>
+			<View>
 			{dota.isFetching ? (
+				<View style={styles.imageContainer}>
 				<Image
 				style={{width:100, height:100}}
 				source={require('../resources/images/loading.gif')}
 				/>
+				</View>
 			) : (
+				<View style={styles.container}>
 				<ScrollView>
 				{dota.matches.map(match => (
 					<TouchableOpacity
@@ -68,6 +74,7 @@ class ProfileScreen extends React.Component{
 					</TouchableOpacity>
 				))}
 				</ScrollView>
+				</View>
 			)}
 			</View>
 

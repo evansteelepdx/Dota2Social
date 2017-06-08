@@ -51,6 +51,7 @@ const playerRow = (player) => (
 
 class DotaMatchScreen extends React.Component{
 	componentWillMount() {
+		this.props.resetCurrentMatch();
 		const { match } = this.props.navigation.state.params.matchObject;
 		fetch(`${ODOTA_API}/api/matches/${match.match_id}`)
 			.then((response) => response.json())
@@ -88,6 +89,9 @@ DotaMatchScreen.navigationOptions = {
 const mapDispatchToProps = dispatch => ({
 	setCurrentMatch: (match) => {
 		dispatch({type: 'currentMatch', match: match});
+	},
+	resetCurrentMatch: () => {
+		dispatch({type: 'clearMatch'})
 	}
 })
 

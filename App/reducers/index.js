@@ -104,6 +104,11 @@ function dota(state=DotaState, action){
 				...state,
 				currentMatch: action.match
 			}
+			case 'clearMatch':
+			return {
+				...state,
+				currentMatch:{} 
+			}
 		case 'startLoading':
 			return {
 				...state,

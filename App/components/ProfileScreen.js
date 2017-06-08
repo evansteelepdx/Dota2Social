@@ -6,6 +6,7 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
+	Image,
 } from 'react-native';
 
 import bigInt from './bigInt';
@@ -45,25 +46,32 @@ class ProfileScreen extends React.Component{
 		const {navigation, matchDetails, steam, updateID, dota} = this.props;
 		return(
 			<View style={styles.container}>
-			<ScrollView>
-			{dota.matches.map(match => (
-				<TouchableOpacity
-				onPress={
-  				() => matchDetails({match}, {navigation})		
-				}
-				key={match.match_id}
-				>
-				<View>
-				<OpenDotaList
-				matches={match}
+			{dota.isFetching ? (
+				<Image
+				style={{width:100, height:100}}
+				source={require('../resources/images/loading.gif')}
 				/>
-				</View>
-				</TouchableOpacity>
-			))}
-			</ScrollView>
+			) : (
+				<ScrollView>
+				{dota.matches.map(match => (
+					<TouchableOpacity
+					onPress={
+						() => matchDetails({match}, {navigation})		
+					}
+					key={match.match_id}
+					>
+					<View>
+					<OpenDotaList
+					matches={match}
+					/>
+					</View>
+					</TouchableOpacity>
+				))}
+				</ScrollView>
+			)}
 			</View>
 
-		);
+	);
 	}
 }
 ProfileScreen.navigationOptions = {
@@ -92,6 +100,7 @@ const mapDispatchToProps = dispatch => ({
 			.then((response) => response.json())
 			.then((response) =>{
 				dispatch({type: 'recentDotaMatches', array: response})
+				dispatch({type: 'finishLoading'})
 			})
 	}
 })

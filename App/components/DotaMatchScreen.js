@@ -50,7 +50,7 @@ const playerRow = (player) => (
 
 
 class DotaMatchScreen extends React.Component{
-	componentDidMount() {
+	componentWillMount() {
 		const { match } = this.props.navigation.state.params.matchObject;
 		fetch(`${ODOTA_API}/api/matches/${match.match_id}`)
 			.then((response) => response.json())
@@ -61,20 +61,17 @@ class DotaMatchScreen extends React.Component{
 	render(){
 		const { match } = this.props.navigation.state.params.matchObject
 		const { currentMatch } = this.props
-		if (!currentMatch.players){
+		if (currentMatch.players) {
 			return(
-				<View style={styles.container}>
-					<Image
-						style={{width: 100, height: 100}}
-						source={{ uri: `${ODOTA_API}${heroes["86"].img}` }}
-						/>
+				<View style={styles.table}>
+					{currentMatch.players.map(playerRow)}
 				</View>
 			);
 		}
 		else {
 			return(
-				<View style={styles.table}>
-					{currentMatch.players.map(playerRow)}
+				<View style={styles.container}>
+					<Text>Not quite ready yet</Text>
 				</View>
 			);
 		}

@@ -37,19 +37,22 @@ const styles = StyleSheet.create({
 
 const playerRow = (player) => (
 	<View style={styles.row} key={player.player_slot}>
-		<View key={"image"}>
-			<Image 
-				style={{width: 64, height: 36}}
-				source={{ uri: `${ODOTA_API}${heroes[player.hero_id].img}` }}/>
-		</View>
-		<View key={"name"}>
-			<Text style={styles.nameText}>{player.personaname || "Anonymous"}</Text>
-		</View>
+	<View key={"image"}>
+	<Image 
+	style={{width: 64, height: 36}}
+	source={{ uri: `${ODOTA_API}${heroes[player.hero_id].img}` }}/>
+	</View>
+	<View key={"name"}>
+	<Text style={styles.nameText}>{player.personaname || "Anonymous"}</Text>
+	</View>
 	</View>
 );
 
 
 class DotaMatchScreen extends React.Component{
+	static navigationOptions = ({ navigation  }) => ({
+		title: `Match ${navigation.state.params.matchObject.match.match_id}`,
+	});
 	componentWillMount() {
 		this.props.resetCurrentMatch();
 		const { match } = this.props.navigation.state.params.matchObject;
@@ -61,7 +64,7 @@ class DotaMatchScreen extends React.Component{
 	}
 	render(){
 		const { match } = this.props.navigation.state.params.matchObject
-		const { currentMatch } = this.props
+		const { currentMatch, navigation } = this.props
 		if (currentMatch.players) {
 			return(
 				<View style={styles.table}>
@@ -82,9 +85,6 @@ class DotaMatchScreen extends React.Component{
 		}
 	}
 }
-DotaMatchScreen.navigationOptions = {
-	title: 'DotaMatch',
-};
 
 const mapDispatchToProps = dispatch => ({
 	setCurrentMatch: (match) => {

@@ -47,6 +47,7 @@ class ProfileScreen extends React.Component{
 	}
 	render(){
 		const {navigation, matchDetails, steam, updateID, dota} = this.props;
+		console.log(dota);
 		return(
 			<View>
 			{dota.isFetching ? (

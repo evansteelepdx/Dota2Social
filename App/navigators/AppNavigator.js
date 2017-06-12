@@ -6,12 +6,14 @@ import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
 import ProfileScreen from '../components/ProfileScreen';
 import DotaMatchScreen from '../components/DotaMatchScreen';
+import PreferencesScreen from '../components/PreferencesScreen';
 
 export const AppNavigator = StackNavigator({
 	Login: { screen: LoginScreen },
 	Main: { screen: MainScreen },
 	Profile: { screen: ProfileScreen},
 	dotaMatch: {screen: DotaMatchScreen},
+	preferences: {screen: PreferencesScreen},
 });
 
 const AppWithNavigationState = ({ dispatch, nav }) => (

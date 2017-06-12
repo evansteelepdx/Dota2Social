@@ -80,6 +80,22 @@ function auth(state = AuthState, action) {
 	}
 }
 
+const PreferenceState = {
+	numMatches: "19"
+}
+
+function preferences(state=PreferenceState, action){
+	switch (action.type){
+		case 'updateNumMatches':
+			return {
+				...state,
+				numMatches: action.data
+			}
+		default:
+			return state;
+	}
+}
+
 const DotaState = {
 	openDotaID: "",
 	matches: [],
@@ -104,7 +120,7 @@ function dota(state=DotaState, action){
 				...state,
 				currentMatch: action.match
 			}
-			case 'clearMatch':
+		case 'clearMatch':
 			return {
 				...state,
 				currentMatch:{} 
@@ -126,6 +142,7 @@ function dota(state=DotaState, action){
 const AppReducer = combineReducers({
 	nav,
 	dota,
+	preferences,
 	auth
 });
 

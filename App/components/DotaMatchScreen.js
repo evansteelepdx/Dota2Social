@@ -7,8 +7,11 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
+	Button,
+	Linking,
 } from 'react-native';
 import heroes from 'dotaconstants/build/heroes.json';
+import Lanes from './Highlights/Lanes.js';
 
 import toast from './utils/toast';
 import database from './utils/database';
@@ -22,7 +25,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: '#F5FCFF',
 	},
-	table: {
+	column: {
 		alignItems: 'flex-start',
 		flexDirection: 'column',
 	},
@@ -37,17 +40,21 @@ const styles = StyleSheet.create({
 	}
 })
 
+// Lane logic taken mostly from my work on opendota's ui
 
 const playerRow = (player) => (
 	<View style={styles.row} key={player.player_slot}>
-	<View key={"image"}>
-	<Image
-	style={{width: 64, height: 36}}
-	source={{ uri: `${ODOTA_API}${heroes[player.hero_id].img}` }}/>
-	</View>
-	<View key={"name"}>
-	<Text style={styles.nameText}>{player.personaname || "Anonymous"}</Text>
-	</View>
+		<View key={"image"}>
+			<Image 
+				style={{width: 64, height: 36}}
+				source={{ uri: `${ODOTA_API}${heroes[player.hero_id].img}` }}
+				/>
+		</View>
+		<View key={"name"}>
+			<Text style={styles.nameText}>
+				{player.personaname || "Anonymous"}
+			</Text>
+		</View>
 	</View>
 );
 
@@ -99,19 +106,35 @@ class DotaMatchScreen extends React.Component{
 		const { currentMatch, navigation } = this.props
 		if (currentMatch.players) {
 			return(
-				<View style={styles.table}>
-				{currentMatch.players.map(playerRow)}
+				<View style={styles.column}>
+					<View style={styles.row}>
+						<View>
+							<Button
+								title="OpenDota"
+								color="4091d8"
+								onPress={(() => Linking.openURL(`http://www.opendota.com/matches/${currentMatch.match_id}`))}
+								/>
+							<Button
+								title="DotaBuff"
+								color="ed3b1c"
+								onPress={(() => Linking.openURL(`http://www.dotabuff.com/matches/${currentMatch.match_id}`))}
+								/>
+						</View>
+					</View>
+					<View style={styles.column}>
+						{currentMatch.players.map(playerRow)}
+					</View>
+					<Lanes match={currentMatch} />
 				</View>
 			);
 		}
 		else {
 			return(
 				<View style={styles.container}>
-				<Image
-				style={{width:100, height:100}}
-				source={require('../resources/images/loading.gif')}
-				/>
-
+					<Image
+						style={{width:100, height:100}}
+						source={require('../resources/images/loading.gif')}
+						/>
 				</View>
 			);
 		}

@@ -105,31 +105,33 @@ class DotaMatchScreen extends React.Component{
 		if (currentMatch.players) {
 			return(
 				<View style={styles.column}>
-					<View style={styles.row}>
-						<View>
-							<Button
-								title="OpenDota"
-								color="#4091d8"
-								onPress={(() => Linking.openURL(`http://www.opendota.com/matches/${currentMatch.match_id}`))}
-								/>
-							<Button
-								title="DotaBuff"
-								color="#ed3b1c"
-								onPress={(() => Linking.openURL(`http://www.dotabuff.com/matches/${currentMatch.match_id}`))}
-								/>
+					<ScrollView>
+						<View style={styles.row}>
+							<View>
+								<Button
+									title="OpenDota"
+									color="#4091d8"
+									onPress={(() => Linking.openURL(`http://www.opendota.com/matches/${currentMatch.match_id}`))}
+									/>
+								<Button
+									title="DotaBuff"
+									color="#ed3b1c"
+									onPress={(() => Linking.openURL(`http://www.dotabuff.com/matches/${currentMatch.match_id}`))}
+									/>
+							</View>
 						</View>
-					</View>
-					<View style={styles.column}>
-						{currentMatch.players.map(playerRow)}
-					</View>
-					{currentMatch.version &&
-						<Lanes match={currentMatch} />
-					}
-					{!currentMatch.version &&
-						<View>
-							<Text>Replay not yet parsed</Text>
+						<View style={styles.column}>
+							{currentMatch.players.map(playerRow)}
 						</View>
-					}			
+						{currentMatch.version &&
+							<Lanes match={currentMatch} />
+						}
+						{!currentMatch.version &&
+							<View>
+								<Text>Replay not yet parsed</Text>
+							</View>
+						}
+					</ScrollView>		
 				</View>
 			);
 		}

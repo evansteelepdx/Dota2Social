@@ -40,6 +40,9 @@ public class DatabaseModule extends ReactContextBaseJavaModule {
 		String result = "";
 		try{
 			SQLiteDatabase myDB = getReactApplicationContext().openOrCreateDatabase("dotabase", android.content.Context.MODE_PRIVATE, null);
+			myDB.execSQL("CREATE TABLE IF NOT EXISTS "
+			+ "matches"
+			+ " (id VARCHAR, json VARCHAR);");
 			Cursor c = myDB.rawQuery("SELECT json FROM matches WHERE id = '"+matchID+"'", null);
 			if(c.moveToFirst()){
 					 do{

@@ -111,7 +111,7 @@ class LaneStory {
 
 class Lanes extends React.Component {
 	render() {
-		const {match} = this.props
+		const { match } = this.props;
 		const lanes = Object.keys(localizedLane).map(lane => new LaneStory(match, lane));
 		if (JungleStory.exists(match)) {
 		  lanes.push(new JungleStory(match));

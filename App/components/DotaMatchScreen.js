@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import heroes from 'dotaconstants/build/heroes.json';
 import Lanes from './Highlights/Lanes.js';
+import Stats from './Highlights/Stats.js';
 
 import toast from './utils/toast';
 import database from './utils/database';
@@ -103,26 +104,26 @@ class DotaMatchScreen extends React.Component{
 		const { match } = this.props.navigation.state.params.matchObject
 		const { currentMatch, navigation } = this.props
 		if (currentMatch.players) {
+			const player = currentMatch.players.find(p => p.player_slot == match.player_slot);
 			return(
 				<View style={styles.column}>
 					<ScrollView>
 						<View style={styles.row}>
-							<View>
-								<Button
-									title="OpenDota"
-									color="#4091d8"
-									onPress={(() => Linking.openURL(`http://www.opendota.com/matches/${currentMatch.match_id}`))}
-									/>
-								<Button
-									title="DotaBuff"
-									color="#ed3b1c"
-									onPress={(() => Linking.openURL(`http://www.dotabuff.com/matches/${currentMatch.match_id}`))}
-									/>
-							</View>
+							<Button
+								title="OpenDota"
+								color="#4091d8"
+								onPress={(() => Linking.openURL(`http://www.opendota.com/matches/${currentMatch.match_id}`))}
+								/>
+							<Button
+								title="DotaBuff"
+								color="#ed3b1c"
+								onPress={(() => Linking.openURL(`http://www.dotabuff.com/matches/${currentMatch.match_id}`))}
+								/>
 						</View>
 						<View style={styles.column}>
 							{currentMatch.players.map(playerRow)}
 						</View>
+						<Stats player={player}/>
 						{currentMatch.version &&
 							<Lanes match={currentMatch} />
 						}

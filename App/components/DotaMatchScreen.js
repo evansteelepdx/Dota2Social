@@ -59,25 +59,41 @@ class DotaMatchScreen extends React.Component{
 	componentWillMount() {
 		this.props.resetCurrentMatch();
 		const { match } = this.props.navigation.state.params.matchObject;
-		fetch(`${ODOTA_API}/api/matches/${match.match_id}`)
-		.then((response) => response.json())
-		.then((response) => {
-			console.log(JSON.stringify(response));
-			database.createDatabase(
-				match.match_id.toString(),
-				JSON.stringify(response),
-				// error callback
-				(msg) => {
-					console.log("There was an error: " + msg);
-				},
-				//success callback
-				(msg) => {
-					toast.show(msg, toast.SHORT);
+		database.fetchDatabase(
+			match.match_id.toString(),
+			// error callback
+			(msg) => {
+				console.log("There was an error: " + msg);
+			},
+			//success callback
+			(msg) => {
+				if (msg == ""){
+					// We need to fetch!
+					fetch(`${ODOTA_API}/api/matches/${match.match_id}`)
+					.then((response) => response.json())
+					.then((response) => {
+						console.log("Aw man, I had to fetch something!");
+						database.createDatabase(
+							match.match_id.toString(),
+							JSON.stringify(response),
+							// error callback
+							(msg) => {
+								console.log("There was an error: " + msg);
+							},
+							//success callback
+							(msg) => {
+								toast.show(msg, toast.SHORT);
+							}
+						)
+						this.props.setCurrentMatch(response);
+					})
+				}else{
+					toast.show("Match " + match.match_id.toString() + " retrieved from database", toast.SHORT);
+					this.props.setCurrentMatch(JSON.parse(msg));
 				}
-			)
-			this.props.setCurrentMatch(response);
-		})
-	}
+			}
+		)
+}
 	render(){
 		const { match } = this.props.navigation.state.params.matchObject
 		const { currentMatch, navigation } = this.props

@@ -34,24 +34,19 @@ public class DatabaseModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	public void fetchDatabase(
 	String matchID,
-	String match,
 	Callback errorCallback,
 	Callback successCallback
 	){
 		String result = "";
 		try{
 			SQLiteDatabase myDB = getReactApplicationContext().openOrCreateDatabase("dotabase", android.content.Context.MODE_PRIVATE, null);
-			Cursor mcursor = myDB.rawQuery(query, new String[] {matchID});
-
-			if(mcursor != null)
-			{
-				if (mcursor.moveToFirst()) {
-					result = mcursor.getString(0); // matchID
-				}
-			}
-
+			Cursor c = myDB.rawQuery("SELECT json FROM matches WHERE id = '"+matchID+"'", null);
+			if(c.moveToFirst()){
+					 do{
+							result = c.getString(0);
+					 }while(c.moveToNext());
+			 }
 			successCallback.invoke(result);
-
 		}catch (SQLiteCantOpenDatabaseException e) {
 			errorCallback.invoke("Critical database fetch error: " + e.toString(), e.toString());
 		}

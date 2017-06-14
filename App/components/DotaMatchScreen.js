@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 		flex: 2,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
+		backgroundColor: '#f5fcff',
 	},
 	column: {
 		alignItems: 'flex-start',
@@ -39,8 +39,6 @@ const styles = StyleSheet.create({
 		paddingLeft: 5,
 	}
 })
-
-// Lane logic taken mostly from my work on opendota's ui
 
 const playerRow = (player) => (
 	<View style={styles.row} key={player.player_slot}>
@@ -100,7 +98,7 @@ class DotaMatchScreen extends React.Component{
 				}
 			}
 		)
-}
+	}
 	render(){
 		const { match } = this.props.navigation.state.params.matchObject
 		const { currentMatch, navigation } = this.props
@@ -111,12 +109,12 @@ class DotaMatchScreen extends React.Component{
 						<View>
 							<Button
 								title="OpenDota"
-								color="4091d8"
+								color="#4091d8"
 								onPress={(() => Linking.openURL(`http://www.opendota.com/matches/${currentMatch.match_id}`))}
 								/>
 							<Button
 								title="DotaBuff"
-								color="ed3b1c"
+								color="#ed3b1c"
 								onPress={(() => Linking.openURL(`http://www.dotabuff.com/matches/${currentMatch.match_id}`))}
 								/>
 						</View>
@@ -124,7 +122,14 @@ class DotaMatchScreen extends React.Component{
 					<View style={styles.column}>
 						{currentMatch.players.map(playerRow)}
 					</View>
-					<Lanes match={currentMatch} />
+					{currentMatch.version &&
+						<Lanes match={currentMatch} />
+					}
+					{!currentMatch.version &&
+						<View>
+							<Text>Replay not yet parsed</Text>
+						</View>
+					}			
 				</View>
 			);
 		}

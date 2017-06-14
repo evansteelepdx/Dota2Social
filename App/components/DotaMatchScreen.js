@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import heroes from 'dotaconstants/build/heroes.json';
 
+import toast from './utils/toast';
+import database from './utils/database';
+
 const ODOTA_API = "https://api.opendota.com";
 
 const styles = StyleSheet.create({
@@ -38,7 +41,7 @@ const styles = StyleSheet.create({
 const playerRow = (player) => (
 	<View style={styles.row} key={player.player_slot}>
 	<View key={"image"}>
-	<Image 
+	<Image
 	style={{width: 64, height: 36}}
 	source={{ uri: `${ODOTA_API}${heroes[player.hero_id].img}` }}/>
 	</View>
@@ -56,12 +59,41 @@ class DotaMatchScreen extends React.Component{
 	componentWillMount() {
 		this.props.resetCurrentMatch();
 		const { match } = this.props.navigation.state.params.matchObject;
-		fetch(`${ODOTA_API}/api/matches/${match.match_id}`)
-			.then((response) => response.json())
-			.then((response) => {
-				this.props.setCurrentMatch(response);
-			})
-	}
+		database.fetchDatabase(
+			match.match_id.toString(),
+			// error callback
+			(msg) => {
+				console.log("There was an error: " + msg);
+			},
+			//success callback
+			(msg) => {
+				if (msg == ""){
+					// We need to fetch!
+					fetch(`${ODOTA_API}/api/matches/${match.match_id}`)
+					.then((response) => response.json())
+					.then((response) => {
+						console.log("Aw man, I had to fetch something!");
+						database.createDatabase(
+							match.match_id.toString(),
+							JSON.stringify(response),
+							// error callback
+							(msg) => {
+								console.log("There was an error: " + msg);
+							},
+							//success callback
+							(msg) => {
+								toast.show(msg, toast.SHORT);
+							}
+						)
+						this.props.setCurrentMatch(response);
+					})
+				}else{
+					toast.show("Match " + match.match_id.toString() + " retrieved from database", toast.SHORT);
+					this.props.setCurrentMatch(JSON.parse(msg));
+				}
+			}
+		)
+}
 	render(){
 		const { match } = this.props.navigation.state.params.matchObject
 		const { currentMatch, navigation } = this.props

@@ -6,10 +6,12 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
+	Button,
 	Image,
+	AsyncStorage,
 } from 'react-native';
 
-import bigInt from './bigInt';
+import bigInt from './utils/bigInt';
 import OpenDotaList from './OpenDotaList'
 
 import { NavigationActions  } from 'react-navigation'
@@ -27,6 +29,9 @@ const styles = StyleSheet.create({
 });
 
 class ProfileScreen extends React.Component{
+	static navigationOptions = ({ navigation, screenProps  }) => ({
+		title:"Recent Matches",
+	});
 	componentWillMount(){
 		bigInt.convertSteamID(
 			this.props.steam.ID,
@@ -42,12 +47,17 @@ class ProfileScreen extends React.Component{
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.dota.openDotaID != "" && nextProps.dota.matches.length==0){
-			this.props.updateDota(nextProps.dota.openDotaID);
+			AsyncStorage.getItem("numMatches").then((value) =>{
+				if (value != null){
+					this.props.updateDota(nextProps.dota.openDotaID, value);
+				}else{
+					this.props.updateDota(nextProps.dota.openDotaID, "20");
+				}
+			})
 		}
 	}
 	render(){
-		const {navigation, matchDetails, steam, updateID, dota} = this.props;
-		console.log(dota);
+		const {navigation, reloadDota, matchDetails, steam, updateID, dota, prefs} = this.props;
 		return(
 			<View>
 			{dota.isFetching ? (
@@ -60,10 +70,18 @@ class ProfileScreen extends React.Component{
 			) : (
 				<View style={styles.container}>
 				<ScrollView>
+				<View>
+				<Button
+				title="Reload"
+				onPress={() =>{
+					reloadDota(dota.openDotaID, prefs.numMatches)
+				}}
+				/>
+				</View>
 				{dota.matches.map(match => (
 					<TouchableOpacity
 					onPress={
-						() => matchDetails({match}, {navigation})		
+						() => matchDetails({match}, {navigation})
 					}
 					key={match.match_id}
 					>
@@ -82,18 +100,26 @@ class ProfileScreen extends React.Component{
 	);
 	}
 }
-ProfileScreen.navigationOptions = {
-	title: 'Profile',
-};
+
 
 const mapStateToProps = state => ({
 	steam: state.auth.steamInfo,
-	dota: state.dota
+	dota: state.dota,
+	prefs: state.preferences
 });
 
 const mapDispatchToProps = dispatch => ({
 	updateID: (newID) => {
 		dispatch({type: 'updateDotaID', data: newID})
+	},
+	reloadDota: (openDotaID,numMatches) =>{
+		dispatch({type: 'startLoading'})
+		fetch('https://api.opendota.com/api/players/'+openDotaID+'/matches?limit=' + numMatches)
+			.then((response) => response.json())
+			.then((response) =>{
+				dispatch({type: 'recentDotaMatches', array: response})
+				dispatch({type: 'finishLoading'})
+			})
 	},
 	matchDetails: (match, navigation) => {
 		const navigateAction = NavigationActions.navigate({
@@ -103,8 +129,8 @@ const mapDispatchToProps = dispatch => ({
 		})
 		navigation.navigation.dispatch(navigateAction);
 	},
-	updateDota: (openDotaID) =>{
-		fetch('https://api.opendota.com/api/players/'+openDotaID+'/recentMatches')
+	updateDota: (openDotaID, numMatches) =>{
+		fetch('https://api.opendota.com/api/players/'+openDotaID+'/matches?limit=' + numMatches)
 			.then((response) => response.json())
 			.then((response) =>{
 				dispatch({type: 'recentDotaMatches', array: response})

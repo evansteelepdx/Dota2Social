@@ -14,8 +14,6 @@ import AuthButton from './AuthButton';
 import renderIf from './utils/renderIf';
 import * as secrets from './utils/secrets';
 
-import bigInt from './bigInt';
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 2,
@@ -24,12 +22,17 @@ const styles = StyleSheet.create({
 		backgroundColor: '#F5FCFF',
 
 	},
+	buttons: {
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+	}
 
 })
 class LoginStatusMessage extends React.Component{
 	componentWillMount(){
 		if(this.props.isLoggedIn == true){
-			this.props.onSteamInfo(this.props.steam.ID);	
+			this.props.onSteamInfo(this.props.steam.ID);
 		}
 	}
 	componentWillReceiveProps(nextProps){
@@ -38,7 +41,7 @@ class LoginStatusMessage extends React.Component{
 		}
 	}
 	render() {
-		const { isLoggedIn, dispatch, steam, onSteamInfo, onProfileButton } = this.props;
+		const {showPreferences, isLoggedIn, dispatch, steam, onSteamInfo, onProfileButton } = this.props;
 
 		return (
 			<View>
@@ -54,8 +57,8 @@ class LoginStatusMessage extends React.Component{
 
 				</View>
 			)}
-			<View>
-			{isLoggedIn? ( 
+			<View style={styles.buttons}>
+			{isLoggedIn? (
 				<Button
 				title="My Matches"
 				onPress={onProfileButton}
@@ -63,6 +66,10 @@ class LoginStatusMessage extends React.Component{
 			) : (
 				<Text>No Valid Login Detected</Text>
 			)}
+			<Button
+		title="Preferences"
+		onPress={showPreferences}
+			/>
 			<AuthButton/>
 			</View>
 			</View>
@@ -89,6 +96,9 @@ const mapDispatchToProps = dispatch => ({
 	},
 	onProfileButton:() =>{
 		dispatch(NavigationActions.navigate({ routeName: 'Profile' }))
+	},
+	showPreferences:() =>{
+		dispatch(NavigationActions.navigate({ routeName: 'preferences' }))
 	}
 })
 

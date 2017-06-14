@@ -11,7 +11,7 @@ import {
 	AsyncStorage,
 } from 'react-native';
 
-import bigInt from './bigInt';
+import bigInt from './utils/bigInt';
 import OpenDotaList from './OpenDotaList'
 
 import { NavigationActions  } from 'react-navigation'
@@ -81,7 +81,7 @@ class ProfileScreen extends React.Component{
 				{dota.matches.map(match => (
 					<TouchableOpacity
 					onPress={
-						() => matchDetails({match}, {navigation})		
+						() => matchDetails({match}, {navigation})
 					}
 					key={match.match_id}
 					>

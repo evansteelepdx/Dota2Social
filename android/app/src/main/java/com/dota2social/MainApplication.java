@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.custommodules.toast.*;
 import com.custommodules.bigints.*;
+import com.custommodules.dotabase.*;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -28,7 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
 					new MainReactPackage(),
 					new RNFSPackage(),
 					new ToastPackage(),
-					new BigIntPackage()
+					new BigIntPackage(),
+					new DatabasePackage()
 					);
 		}
 	};

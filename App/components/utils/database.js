@@ -1,2 +1,2 @@
 import { NativeModules  } from 'react-native';
-module.exports = NativeModules.BigIntModule;
+module.exports = NativeModules.DatabaseModule;

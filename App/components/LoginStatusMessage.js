@@ -14,8 +14,6 @@ import AuthButton from './AuthButton';
 import renderIf from './utils/renderIf';
 import * as secrets from './utils/secrets';
 
-import bigInt from './bigInt';
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 2,
@@ -34,7 +32,7 @@ const styles = StyleSheet.create({
 class LoginStatusMessage extends React.Component{
 	componentWillMount(){
 		if(this.props.isLoggedIn == true){
-			this.props.onSteamInfo(this.props.steam.ID);	
+			this.props.onSteamInfo(this.props.steam.ID);
 		}
 	}
 	componentWillReceiveProps(nextProps){
@@ -60,7 +58,7 @@ class LoginStatusMessage extends React.Component{
 				</View>
 			)}
 			<View style={styles.buttons}>
-			{isLoggedIn? ( 
+			{isLoggedIn? (
 				<Button
 				title="My Matches"
 				onPress={onProfileButton}

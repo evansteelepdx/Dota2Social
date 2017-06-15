@@ -110,9 +110,13 @@ class DotaMatchScreen extends React.Component{
 			title: "DotA Match",
 			message: "I got " + match.kills + " kills and " + match.assists + " assists in a game!",
 		};
-		console.log(match);
 		if (currentMatch.players) {
 			const player = currentMatch.players.find(p => p.player_slot == match.player_slot);
+			this.highlights = [ new Stats(player) ];
+			if (currentMatch.version){
+				this.highlights.push(new Lanes(currentMatch));
+			}
+
 			return(
 				<View style={styles.column}>
 
@@ -137,10 +141,7 @@ class DotaMatchScreen extends React.Component{
 						<View style={styles.column}>
 							{currentMatch.players.map(playerRow)}
 						</View>
-						<Stats player={player}/>
-						{currentMatch.version &&
-							<Lanes match={currentMatch} />
-						}
+						{this.highlights.map(h => h.render())}
 						{!currentMatch.version &&
 							<View>
 								<Text>Replay not yet parsed</Text>

@@ -8,6 +8,7 @@ import {
 	Button,
 	Linking,
 } from 'react-native';
+import Share, {ShareSheet, Button as ShareButton} from 'react-native-share';
 
 
 export const formatTemplate = (template, dict) => {
@@ -50,3 +51,15 @@ export const styles = StyleSheet.create({
 		fontSize: 20,
 	}
 })
+
+export class HighlightBase {
+	get_twitter_dict() {
+		return {
+			title: this.title ? this.title : "",
+			message: this.text()
+		}
+	}
+	share_func() {
+		return () => Share.open(this.get_twitter_dict());
+	}
+}

@@ -6,12 +6,14 @@ import {
 	Text,
 	View,
 	Button,
+	TouchableOpacity,
 	Linking,
 } from 'react-native';
 import {
 	formatTemplate,
 	formatList,
-	styles
+	styles,
+	HighlightBase
 } from './BaseHighlights.js';
 import heroes from 'dotaconstants/build/heroes.json';
 
@@ -19,12 +21,13 @@ import heroes from 'dotaconstants/build/heroes.json';
 
 const ODOTA_API = "https://api.opendota.com";
 
+var show_icon = true;
 
 const PlayerSpan = player => {
-	return [<Image 
+	return show_icon ? [<Image 
 				style={{width: 48, height: 48}}
 				source={{ uri: `${ODOTA_API}${heroes[player.hero_id].icon}` }}
-				/>, heroes[player.hero_id].localized_name];
+				/>, heroes[player.hero_id].localized_name] : heroes[player.hero_id].localized_name;
 }
 
 
@@ -109,33 +112,38 @@ class LaneStory {
 	}
 }
 
-class Lanes extends React.Component {
-	render() {
-		const { match } = this.props;
-		const lanes = Object.keys(localizedLane).map(lane => new LaneStory(match, lane));
+export default class Lanes extends HighlightBase {
+	constructor(match) {
+		super();
+		this.title = "Lanes";
+		this.lanes = Object.keys(localizedLane).map(lane => new LaneStory(match, lane));
 		if (JungleStory.exists(match)) {
-		  lanes.push(new JungleStory(match));
+		  this.lanes.push(new JungleStory(match));
 		}
 		if (RoamStory.exists(match)) {
-		  lanes.push(new RoamStory(match));
+		  this.lanes.push(new RoamStory(match));
 		}
+	}
+	text() {
+		show_icon = false;
+		return this.lanes.map(lane => lane.format()).join("\n");
+	}
+	render() {
+		show_icon = true;
 		return (
-			<View style={styles.highlight}>
+			<TouchableOpacity 
+				key={this.title}
+				onPress={this.share_func()}
+				style={styles.highlight}>
 				<View>
 					<Text style={styles.header}>Lanes:</Text>
 				</View>
-				{lanes.map(lane => 
+				{this.lanes.map(lane => 
 					<View key={lane.lane}>
 						<Text>{lane.format()}</Text>
 					</View>)
 				}
-			</View>
+			</TouchableOpacity>
 		);
 	}
 }
-
-const mapStateToProps = state => ({})
-
-const mapDispatchToProps = dispatch => ({})
-
-export default connect(mapStateToProps,mapDispatchToProps)(Lanes);

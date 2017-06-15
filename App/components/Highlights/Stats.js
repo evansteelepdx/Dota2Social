@@ -6,32 +6,40 @@ import {
 	Text,
 	View,
 	Button,
+	TouchableOpacity,
 	Linking,
 } from 'react-native';
 import {
 	formatTemplate,
 	formatList,
-	styles
+	styles,
+	HighlightBase
 } from './BaseHighlights.js';
 
 
-class Stats extends React.Component {
+export default class Stats extends HighlightBase {
+	constructor(player) {
+		super();
+		this.title = "Stats";
+		this.data = [
+			`KDA: ${player.kills}/${player.deaths}/${player.assists}`,
+			`GPM: ${player.gold_per_min}`,
+			`Hero Damage: ${player.hero_damage}`,
+			`Tower Damage: ${player.tower_damage}`
+		];
+	}
+	text() {
+		return this.data.join("\n");
+	}
 	render() {
-		const { player } = this.props;
 		return (
-			<View style={styles.highlight}>
+			<TouchableOpacity 
+				key={this.title}
+				onPress={this.share_func()}
+				style={styles.highlight}>
 				<Text style={styles.header}>Stats:</Text>
-				<Text>KDA: {player.kills}/{player.deaths}/{player.assists}</Text>
-				<Text>GPM: {player.gold_per_min}</Text>
-				<Text>Hero Damage: {player.hero_damage}</Text>
-				<Text>Tower Damage: {player.tower_damage}</Text>
-			</View>
+				{this.data.map(text => <Text>{text}</Text>)}
+			</TouchableOpacity>
 		);
 	}
 }
-
-const mapStateToProps = state => ({})
-
-const mapDispatchToProps = dispatch => ({})
-
-export default connect(mapStateToProps,mapDispatchToProps)(Stats);

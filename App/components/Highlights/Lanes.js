@@ -112,6 +112,14 @@ class LaneStory {
 	}
 }
 
+const FlattenLists = list => {
+	var result = "";
+	list.forEach(i => {
+		result += Array.isArray(i) ? FlattenLists(i) : i;
+	});
+	return result;
+}
+
 export default class Lanes extends HighlightBase {
 	constructor(match) {
 		super();
@@ -126,7 +134,7 @@ export default class Lanes extends HighlightBase {
 	}
 	text() {
 		show_icon = false;
-		return this.lanes.map(lane => lane.format()).join("\n");
+		return this.lanes.map(lane => FlattenLists(lane.format())).join("\n")
 	}
 	render() {
 		show_icon = true;

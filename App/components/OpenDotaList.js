@@ -21,7 +21,11 @@ var styles = StyleSheet.create({
 		borderColor: '#2a4944',
 		borderWidth: 1,
 		backgroundColor: '#d2f7f1'
-
+	},
+	image: {
+		height: 100,
+		borderRadius: 50,
+		width: 100
 	},
 	win:{
 		backgroundColor: '#d2f7f1'
@@ -53,15 +57,14 @@ class OpenDotaList extends React.Component{
 	render() {
 		const {matches, openMatchDetails} = this.props
 		return (
-			
+
 			<View style={styles.item}>
 			<Text>{"Match: " + timeConverter(this.props.matches.start_time)}</Text>
 			<View>
 			<Image
-			style={{width: 64, height: 60}}
+			style={styles.image}
 			source={{uri: `${ODOTA_API}${heroes[this.props.matches.hero_id].img}`}}/>
 			</View>
-			<Text>LUL</Text>
 			</View>
 		);
 

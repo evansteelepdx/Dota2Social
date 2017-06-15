@@ -5,10 +5,6 @@ import { AppNavigator } from '../navigators/AppNavigator';
 
 import * as secrets from '../components/utils/secrets'
 
-var RNFS = require('react-native-fs');
-const path = RNFS.DocumentDirectoryPath + '/steamauth.txt';
-
-
 // Which route comes first depends on if we are authenticated or not:
 // hence why we've encapsulated this process in a promise
 
@@ -34,8 +30,8 @@ function nav(state = initialNavState, action) {
 	return nextState || state;
 }
 
-const AuthState = { 
-	steamLoggedIn: true, 
+const AuthState = {
+	steamLoggedIn: true,
 	steamInfo: {
 		ID: "76561198002007932"
 	},
@@ -64,16 +60,37 @@ function auth(state = AuthState, action) {
 			let steamObject = {
 				ID: page
 			};
-			return { 
-				...state, 
+			return {
+				...state,
 				steamLoggedIn: true,
 				steamInfo: steamObject
 			};
 		case 'SteamLogout':
-			return { 
-				...state, 
+			return {
+				...state,
 				steamLoggedIn: false ,
-				steamInfo: {}	
+				steamInfo: {}
+			};
+		default:
+			return state;
+	}
+}
+
+const ShareState = {
+	visible: false
+}
+
+function share(state=ShareState, action){
+	switch (action.type){
+		case 'close':
+			return {
+				...state,
+				visible: false
+		};
+		case 'open':
+			return {
+				...state,
+				visible: true
 			};
 		default:
 			return state;
@@ -123,7 +140,7 @@ function dota(state=DotaState, action){
 		case 'clearMatch':
 			return {
 				...state,
-				currentMatch:{} 
+				currentMatch:{}
 			}
 		case 'startLoading':
 			return {
@@ -142,6 +159,7 @@ function dota(state=DotaState, action){
 const AppReducer = combineReducers({
 	nav,
 	dota,
+	share,
 	preferences,
 	auth
 });

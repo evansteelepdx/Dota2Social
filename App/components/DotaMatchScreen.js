@@ -10,6 +10,9 @@ import {
 	Button,
 	Linking,
 } from 'react-native';
+
+import Share, {ShareSheet, Button as ShareButton} from 'react-native-share';
+
 import heroes from 'dotaconstants/build/heroes.json';
 import Lanes from './Highlights/Lanes.js';
 import Stats from './Highlights/Stats.js';
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
 const playerRow = (player) => (
 	<View style={styles.row} key={player.player_slot}>
 		<View key={"image"}>
-			<Image 
+			<Image
 				style={{width: 64, height: 36}}
 				source={{ uri: `${ODOTA_API}${heroes[player.hero_id].img}` }}
 				/>
@@ -103,10 +106,16 @@ class DotaMatchScreen extends React.Component{
 	render(){
 		const { match } = this.props.navigation.state.params.matchObject
 		const { currentMatch, navigation } = this.props
+		let shareOptions = {
+			title: "DotA Match",
+			message: "I got " + match.kills + " kills and " + match.assists + " assists in a game!",
+		};
+		console.log(match);
 		if (currentMatch.players) {
 			const player = currentMatch.players.find(p => p.player_slot == match.player_slot);
 			return(
 				<View style={styles.column}>
+
 					<ScrollView>
 						<View style={styles.row}>
 							<Button
@@ -118,6 +127,11 @@ class DotaMatchScreen extends React.Component{
 								title="DotaBuff"
 								color="#ed3b1c"
 								onPress={(() => Linking.openURL(`http://www.dotabuff.com/matches/${currentMatch.match_id}`))}
+								/>
+								<Button
+								title="Share"
+								color="#42f445"
+								onPress={()=>{Share.open(shareOptions);}}
 								/>
 						</View>
 						<View style={styles.column}>
@@ -132,7 +146,7 @@ class DotaMatchScreen extends React.Component{
 								<Text>Replay not yet parsed</Text>
 							</View>
 						}
-					</ScrollView>		
+					</ScrollView>
 				</View>
 			);
 		}
